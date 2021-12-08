@@ -26,7 +26,7 @@ function log(message) {
 
 //verifies if the endpoint has a valid key
 async function key(k) {
-    if (config.requireKey && k != undefined && k != "") {//16f30793-df7b-460e-8356-51ea7cf276ff
+    if (config.requireKey && k != undefined && k != "") {
         var t = null;
         try {
             t = await db.query("SELECT `name`, `api_key` FROM users WHERE `api_key` = ?", k);
