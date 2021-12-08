@@ -11,12 +11,17 @@ This is a simple node js server that emulates the osu v1 api for gulag to enable
 ```
 npm install express express-rate-limit mysql8 util 
 ```
+#### Remember to set up the config before running!
+```sh
+> cp ext/config_sample.js config.js
+> nano config.js
+```
 #### Startup Commands:
 ```sh
-#Using the included script:
+# Using the included script:
 > ./sausage.sh
 
-#Using node directly:
+# Using node directly:
 > node init.js
 ```
 
