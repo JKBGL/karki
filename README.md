@@ -37,3 +37,5 @@ emulate this endpoint efficiently, you can continue using bancho's v1 endpoint f
 @/get_match          - will not be handled (?) , gulag does not save matches after they finish.
 @/get_replay         - use gulag's built in endpoint
 ```
+
+\- from Jakatebel with ♥
