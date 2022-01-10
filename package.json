@@ -1,0 +1,25 @@
+{
+  "name": "karki",
+  "version": "1.0.0",
+  "description": "This is a simple node js server that emulates the osu v1 api for gulag to enable compatibility with legacy services that still use it.",
+  "main": "init.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JKBGL/karki.git"
+  },
+  "keywords": [
+    "gulag",
+    "osu",
+    "api",
+    "v1"
+  ],
+  "author": "JKBGL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JKBGL/karki/issues"
+  },
+  "homepage": "https://github.com/JKBGL/karki#readme"
+}
