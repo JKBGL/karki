@@ -54,6 +54,17 @@ config.messages = {
 // default = false
 config.disable_main = false;
 
+
+// unavailable api proxy
+config.proxy = {
+    enabled: [
+        'api-get-beatmaps'
+    ],
+    baseUrl: process.env.PROXY_BANCHO_API_V1_BASE_URL || 'https://osu.ppy.sh/api'
+}
+
+
+
 //export config
 config.version = "0.11.6b";
 module.exports = config;

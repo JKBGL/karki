@@ -1,6 +1,13 @@
 const http = require('http');
-const app = require('./endpoints');
+const express = require('express')
+const proxyGen = require('./utils/proxy-generator')
+
 const config = require('./config');
+const otherStuffRouter = require('./endpoints');
+
+const app = express();
+app.use('/get_beatmaps', proxyGen('api-get-beatmaps'))
+app.use('/', otherStuffRouter)
 
 const server = http.createServer(app);
 

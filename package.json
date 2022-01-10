@@ -4,6 +4,7 @@
   "description": "This is a simple node js server that emulates the osu v1 api for gulag to enable compatibility with legacy services that still use it.",
   "main": "init.js",
   "scripts": {
+    "start": "node init.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +25,7 @@
   "homepage": "https://github.com/JKBGL/karki#readme",
   "dependencies": {
     "express": "^4.17.2",
+    "express-http-proxy": "^1.6.3",
     "express-rate-limit": "^6.0.5",
     "mysql8": "^2.17.3",
     "util": "^0.12.4"
