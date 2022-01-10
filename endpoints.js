@@ -25,7 +25,6 @@ const apiL = rlimit({
 });
 routes.use("/", apiL);
 //routes.use(compressor());       //enable gzip
-routes.disable('x-powered-by'); //disable exposing the server header
 
 // Routes
 // Docs:
@@ -361,4 +360,4 @@ routes.get("/get_user_recent", async (req, res, next) => {
 });
 
 //export routes
-// module.exports = routes;
+module.exports = routes;

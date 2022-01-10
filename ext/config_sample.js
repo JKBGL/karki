@@ -57,9 +57,9 @@ config.disable_main = false;
 
 // unavailable api proxy
 config.proxy = {
-    enabled: [
-        'api-get-beatmaps'
-    ],
+    enabled: {
+        'api-get-beatmaps': '/get_beatmaps'
+    },
     baseUrl: process.env.PROXY_BANCHO_API_V1_BASE_URL || 'https://osu.ppy.sh/api'
 }
 

@@ -1,4 +1,5 @@
-const db = require('../utils/db');
+const db = require('../utils/db')
+const config = require('../config')
 //verifies if the endpoint has a valid key
 module.exports = async function isValidKey(k) {
     if (config.requireKey && k != undefined && k != "") {
