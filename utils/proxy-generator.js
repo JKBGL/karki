@@ -12,7 +12,7 @@ module.exports = (id) => {
     r.use(conf.proxy.enabled?.[id], proxy(u.host, {
         async filter(req, res) {
             if (conf.requireKey && (!req.params.k || !await isValidKey(req.params.k))) return false
-            return conf.proxy?.[id] ?? false
+            return conf.proxy?.enabled?.[id] ?? false
         },
         proxyReqPathResolver(req) {
             return basePath + conf.proxy.enabled?.[id]
