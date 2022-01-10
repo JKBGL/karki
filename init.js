@@ -1,6 +1,6 @@
 const http = require('http');
 const express = require('express')
-const proxyGen = require('./utils/proxy-generator')
+const proxyGen = require('./proxy-generator')
 
 const config = require('./config');
 const otherStuffRouter = require('./endpoints');
