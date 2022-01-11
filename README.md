@@ -28,8 +28,7 @@ npm install express express-rate-limit mysql8 util
 ### Handled Routes:
 ```css
 @/                   - done
-@/get_beatmaps       - will not be handled, :: gulag does not save enough beatmap data to
-emulate this endpoint efficiently, you can continue using bancho's v1 endpoint for this.
+@/get_beatmaps       - added proxy, use `k-overwrite` if you need two seprate api key for gulag and proxy destination.
 @/get_user           - done
 @/get_scores         - done
 @/get_user_best      - done
@@ -37,5 +36,14 @@ emulate this endpoint efficiently, you can continue using bancho's v1 endpoint f
 @/get_match          - will not be handled (?) , gulag does not save matches after they finish.
 @/get_replay         - use gulag's built in endpoint
 ```
+### extended parameters
+#### api key overwritting `k-overwrite`
+if api-key are required in both gulag and your apiv1 proxy target, use `k-overwrite` to pass `k` to proxied server
+#### mode `m`
+|--|--|--|--|mode|
+|:--:|:--:|:--:|:--:|:--|
+0 | 1 | 2 | 3 |`vanilla`
+4 | 5 | 6 | 7 |`Relax`
+8 | | | | `AP`
 
 \- from Jakatebel with ♥
