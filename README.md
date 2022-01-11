@@ -7,12 +7,10 @@ This is a simple node js server that emulates the osu v1 api for gulag to enable
 - Gulag db running on MySQL 8.0+
 - Node.JS
 
-#### Required packages
-```
-npm install express express-rate-limit mysql8 util 
-```
-#### Remember to set up the config before running!
+
+#### Remember to install requiremenets and set up the config before running!
 ```sh
+> npm install
 > cp ext/config_sample.js config.js
 > nano config.js
 ```
@@ -21,7 +19,9 @@ npm install express express-rate-limit mysql8 util
 # Using the included script:
 > ./sausage.sh
 
-# Using node directly:
+# Using npm to start:
+> npm start
+# or run directly:
 > node init.js
 ```
 
