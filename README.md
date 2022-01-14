@@ -5,7 +5,7 @@ This is a simple node js server that emulates the osu v1 api for gulag to enable
 ### How to run:
 #### Requirements:
 - Gulag db running on MySQL 8.0+
-- Node.JS
+- Node.JS >= 14
 
 
 #### Remember to install requiremenets and set up the config before running!
