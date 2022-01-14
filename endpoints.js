@@ -5,42 +5,19 @@ const config = require('./config');
 const db = require('./utils/db');
 const { OsuUser, OsuScore } = require('./utils/objects');
 
+const log = require('./utils/logger')
+const getTimestamp = require('./utils/timestamp')
+const isValidKey = require('./utils/is-valid-key')
 //respond to request
-function respond(res, text) {
-    res.statusCode = 200;
-    //res.setHeader('Content-Type', 'text/plain');
-    res.setHeader('Content-Type', 'text/html');
-    res.end(text);
-}
+// function respond(res, text) {
+//     res.statusCode = 200;
+//     //res.setHeader('Content-Type', 'text/plain');
+//     res.setHeader('Content-Type', 'text/html');
+//     res.end(text);
+// }
 
-//formats timestamps to mimic bancho v1's format
-function getTimestamp (d) {
-    const pad = (n,s=2) => (`${new Array(s).fill(0)}${n}`).slice(-s);
-    return `${pad(d.getFullYear(),4)}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
 
-function log(message) {
-    var time = new Date(Date.now());
-    console.log("[LOG " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "]\t" + message );
-}
-
-//verifies if the endpoint has a valid key
-async function key(k) {
-    if (config.requireKey && k != undefined && k != "") {
-        var t = null;
-        try {
-            t = await db.query("SELECT `name`, `api_key` FROM users WHERE `api_key` = ?", k);
-        } catch { } // failed db query
-        if (t != undefined && t != null && t != "") {
-            return t[0];
-        } else
-            return false;
-
-    } else
-        return true;
-}
-
-const routes = express();
+const routes = router = express.Router()
 const apiL = rlimit({
     windowMs: config.ratelimit.time,
     max: config.ratelimit.requests,
@@ -48,7 +25,6 @@ const apiL = rlimit({
 });
 routes.use("/", apiL);
 //routes.use(compressor());       //enable gzip
-routes.disable('x-powered-by'); //disable exposing the server header
 
 // Routes
 // Docs:
@@ -84,14 +60,14 @@ routes.get("/get_user", async (req, res, next) => {
     log(req.ip + "\t" + req.originalUrl);
     var params = req.query;
     
-    var xkey = await key(params["k"]);
+    var xkey = await isValidKey(params.k);
     if (!xkey) {
         log(req.ip + "\t" + req.originalUrl + " - invalid key");
         res.end(config.messages.invalid_api_key);
         return;
     }
 
-    var us = params["u"];
+    var us = params.u;
     if (!us || us == "") {
         res.end(config.messages.invalid_user_param);
         return;
@@ -114,7 +90,7 @@ routes.get("/get_user", async (req, res, next) => {
         a.join_date = getTimestamp(new Date(data.creation_time * 1000)); //from unix timestamp //convert format!
         
         var mode = 0;
-        if (!isNaN(params["m"]) && params["m"] >= 0 && params["m"] < 8) mode = params["m"];
+        if (!isNaN(params.m) && params.m >= 0 && params.m < 8) mode = params.m;
 
         stat_data = await db.query("SELECT * FROM stats WHERE `id` = ? AND `mode` = ?", [ data.id, mode ]);
         stat_data = stat_data[0];
@@ -162,24 +138,24 @@ routes.get("/get_scores", async (req, res, next) => {
     log(req.ip + "\t" + req.originalUrl);
     var params = req.query;
 
-    var xkey = await key(params["k"]);
+    var xkey = await isValidKey(params.k);
     if (!xkey) {
         log(req.ip + "\t" + req.originalUrl + " - invalid key");
         res.end(config.messages.invalid_api_key);
         return;
     }
 
-    var bid = params["b"];
+    var bid = params.b;
     if (!bid || bid == "") {
         res.end(config.messages.missing_bmap_param);
         return;
     }
 
-    var us = params["u"];
+    var us = params.u;
     //if (!us || us == "")
 
     var mode = 0;
-    if (!isNaN(params["m"]) && params["m"] >= 0 && params["m"] < 8) mode = params["m"];
+    if (!isNaN(params.m) && params.m >= 0 && params.m < 8) mode = params.m;
 
     var mods = -1;
     if (!isNaN(params["mods"])) mods = parseInt(params["mods"]);
@@ -188,7 +164,7 @@ routes.get("/get_scores", async (req, res, next) => {
     if (!isNaN(params["limit"]) && params["limit"] > 0 && params["limit"] < 501) limit = parseInt(params["limit"]);
     
     try {
-        var bmap_data = await db.query("SELECT `md5`, `id`, `set_id` FROM maps WHERE `id` = ?", params["b"]);
+        var bmap_data = await db.query("SELECT `md5`, `id`, `set_id` FROM maps WHERE `id` = ?", params.b);
         bmap_data = bmap_data[0];
         
         var table = mode < 4 ? 'scores_vn' : mode < 7 ? 'scores_rx' : 'scores_ap';
@@ -236,14 +212,14 @@ routes.get("/get_user_best", async (req, res, next) => {
     log(req.ip + "\t" + req.originalUrl);
     var params = req.query;
 
-    var xkey = await key(params["k"]);
+    var xkey = await isValidKey(params.k);
     if (!xkey) {
         log(req.ip + "\t" + req.originalUrl + " - invalid key");
         res.end(config.messages.invalid_api_key);
         return;
     }
 
-    var us = params["u"];
+    var us = params.u;
     if (!us || us == "") {
         res.end(config.messages.invalid_user_param);
         return;
@@ -261,12 +237,12 @@ routes.get("/get_user_best", async (req, res, next) => {
         }
 
         var mode = 0;
-        if (!isNaN(params["m"]) && params["m"] >= 0 && params["m"] < 8) mode = params["m"];
+        if (!isNaN(params.m) && params.m >= 0 && params.m < 8) mode = params.m;
 
         var limit = 100;
         if (!isNaN(params["limit"]) && params["limit"] > 0 && params["limit"] < 501) limit = parseInt(params["limit"]);
         
-        var bmap_data = await db.query("SELECT `md5`, `id`, `set_id` FROM maps WHERE `id` = ?", params["b"]);
+        var bmap_data = await db.query("SELECT `md5`, `id`, `set_id` FROM maps WHERE `id` = ?", params.b);
         bmap_data = bmap_data[0];
         
         var table = mode < 4 ? 'scores_vn' : mode < 7 ? 'scores_rx' : 'scores_ap';
@@ -315,14 +291,14 @@ routes.get("/get_user_recent", async (req, res, next) => {
     log(req.ip + "\t" + req.originalUrl);
     var params = req.query;
 
-    var xkey = await key(params["k"]);
+    var xkey = await isValidKey(params.k);
     if (!xkey) {
         log(req.ip + "\t" + req.originalUrl + " - invalid key");
         res.end(config.messages.invalid_api_key);
         return;
     }
 
-    var us = params["u"];
+    var us = params.u;
     if (!us || us == "") {
         res.end(config.messages.invalid_user_param);
         return;
@@ -340,12 +316,12 @@ routes.get("/get_user_recent", async (req, res, next) => {
         }
 
         var mode = 0;
-        if (!isNaN(params["m"]) && params["m"] >= 0 && params["m"] < 8) mode = params["m"];
+        if (!isNaN(params.m) && params.m >= 0 && params.m < 8) mode = params.m;
 
         var limit = 100;
         if (!isNaN(params["limit"]) && params["limit"] > 0 && params["limit"] < 501) limit = parseInt(params["limit"]);
         
-        var bmap_data = await db.query("SELECT `md5`, `id`, `set_id` FROM maps WHERE `id` = ?", params["b"]);
+        var bmap_data = await db.query("SELECT `md5`, `id`, `set_id` FROM maps WHERE `id` = ?", params.b);
         bmap_data = bmap_data[0];
         
         var table = mode < 4 ? 'scores_vn' : mode < 7 ? 'scores_rx' : 'scores_ap';

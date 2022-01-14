@@ -1,6 +1,14 @@
 const http = require('http');
-const app = require('./endpoints');
+const express = require('express')
+const useBancho = require('./utils/proxy-generator')
+
 const config = require('./config');
+const otherStuffRouter = require('./endpoints')
+
+const app = express();
+app.disable('x-powered-by'); //disable exposing the server header
+app.use(useBancho('api-get-beatmaps'))
+app.use('/', otherStuffRouter)
 
 const server = http.createServer(app);
 
